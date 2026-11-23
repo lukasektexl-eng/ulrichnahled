@@ -25,6 +25,17 @@
     }
   }
 
+  // Area network pipes fill on scroll.
+  var net = document.querySelector(".net");
+  if (net) {
+    if ("IntersectionObserver" in window) {
+      var io2 = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { net.classList.add("is-in"); io2.disconnect(); } });
+      }, { threshold: 0.4 });
+      io2.observe(net);
+    } else { net.classList.add("is-in"); }
+  }
+
   // Copy phone number (handy on desktop, where tel: links do nothing).
   var copyBtn = document.getElementById("copy-tel");
   var copyMsg = document.getElementById("copy-msg");

@@ -1,23 +1,18 @@
 (function () {
   "use strict";
 
-  // Pipe in "Jak to probíhá" draws itself when it scrolls into view.
+  // "Jak to probíhá": the pipe fills with water when it scrolls into view.
   var steps = document.querySelector(".steps-wrap");
-  var mq = window.matchMedia("(max-width: 900px)");
+  var mq = window.matchMedia("(max-width: 980px)");
   function orient() {
-    var p = steps.querySelector(".steps-pipe");
-    var path = p.querySelector("path");
-    if (mq.matches) {
-      p.setAttribute("viewBox", "0 0 16 1000");
-      path.setAttribute("d", "M8 0V1000");
-    } else {
-      p.setAttribute("viewBox", "0 0 1000 40");
-      path.setAttribute("d", "M0 20H1000");
-    }
+    var svg = steps.querySelector(".steps-pipe");
+    var d = mq.matches ? "M8 0V1000" : "M0 20H1000";
+    svg.setAttribute("viewBox", mq.matches ? "0 0 16 1000" : "0 0 1000 40");
+    svg.querySelectorAll("path").forEach(function (p) { p.setAttribute("d", d); });
   }
   if (steps) {
     orient();
-    mq.addEventListener ? mq.addEventListener("change", orient) : mq.addListener(orient);
+    if (mq.addEventListener) mq.addEventListener("change", orient); else mq.addListener(orient);
     if ("IntersectionObserver" in window) {
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
@@ -30,11 +25,34 @@
     }
   }
 
+  // Copy phone number (handy on desktop, where tel: links do nothing).
+  var copyBtn = document.getElementById("copy-tel");
+  var copyMsg = document.getElementById("copy-msg");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", function () {
+      var num = copyBtn.getAttribute("data-tel");
+      function ok() { copyMsg.textContent = "Číslo zkopírováno."; setTimeout(function () { copyMsg.textContent = ""; }, 3000); }
+      function fail() { copyMsg.textContent = "Kopírování se nepovedlo, číslo je " + num + "."; }
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(num).then(ok, fail);
+      } else {
+        try {
+          var ta = document.createElement("textarea");
+          ta.value = num; ta.setAttribute("readonly", ""); ta.style.position = "absolute"; ta.style.left = "-9999px";
+          document.body.appendChild(ta); ta.select();
+          document.execCommand("copy") ? ok() : fail();
+          document.body.removeChild(ta);
+        } catch (e) { fail(); }
+      }
+    });
+  }
+
   // Demo form + live work-order slip. Nothing is sent anywhere.
   var form = document.getElementById("poptavka-form");
   if (!form) return;
   var done = document.getElementById("form-done");
   var stamp = document.getElementById("slip-stamp");
+  var slipCol = document.getElementById("slip-col");
   var timers = {};
 
   function slipSet(name, value) {
@@ -55,6 +73,9 @@
       if (el.getAttribute("aria-invalid") === "true") validate(el);
     });
   });
+  form.querySelectorAll('input[name="misto"]').forEach(function (r) {
+    r.addEventListener("change", function () { slipSet("misto", r.value); });
+  });
 
   var rules = {
     jmeno: function (v) { return v.trim().length >= 2; },
@@ -68,9 +89,10 @@
     var err = document.getElementById(errIds[el.name]);
     el.setAttribute("aria-invalid", ok ? "false" : "true");
     err.hidden = ok;
-    var base = el.name === "telefon" ? "h-tel" : "";
-    el.setAttribute("aria-describedby", ok ? base : (base ? base + " " : "") + errIds[el.name]);
-    if (!el.getAttribute("aria-describedby")) el.removeAttribute("aria-describedby");
+    var ids = [];
+    if (el.name === "telefon") ids.push("h-tel");
+    if (!ok) ids.push(errIds[el.name]);
+    if (ids.length) el.setAttribute("aria-describedby", ids.join(" ")); else el.removeAttribute("aria-describedby");
     return ok;
   }
 
@@ -84,6 +106,7 @@
     if (first) { done.hidden = true; first.focus(); return; }
     done.hidden = false;
     if (stamp) stamp.hidden = false;
+    if (slipCol) slipCol.classList.add("show");
     done.focus();
   });
 })();

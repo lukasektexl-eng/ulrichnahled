@@ -117,7 +117,7 @@ h1{font-size:clamp(2.5rem,7.2vw,5rem);font-weight:800;font-stretch:118%}
 .form-sec{background:var(--gray)}
 .form-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:start}
 .form{position:relative;margin-top:28px;background:var(--white);border:1px solid var(--line);border-top:3px solid var(--navy);padding:32px 28px 28px;display:grid;gap:20px}
-.demo-tag{position:absolute;top:-14px;right:16px;background:var(--teal-ink);color:#fff;font-size:.9rem;font-weight:700;padding:3px 10px;border-radius:2px}
+.demo-tag{position:absolute;top:-14px;right:16px;background:var(--teal-ink);color:#fff;font-size:.9rem;font-weight:700;padding:6px 12px;border-radius:2px;line-height:1.2}
 .field{display:grid;gap:6px}
 label{font-weight:700}
 input,textarea{font:inherit;font-size:1.125rem;color:var(--ink);background:var(--paper);border:1.5px solid #9fb1bd;border-radius:var(--radius);padding:12px 14px;min-height:52px;width:100%}
@@ -146,7 +146,7 @@ input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:#b3261e}
 .slip-rows .tall dd{min-height:72px}
 .slip-rows dd.flash{background:#d6f0f4}
 .slip-foot{margin-top:16px;font-size:.95rem;color:var(--muted)}
-.slip-stamp{position:absolute;right:22px;bottom:40px;border:3px solid var(--teal-ink);color:var(--teal-ink);font-family:var(--display);font-weight:800;padding:4px 12px;transform:rotate(-10deg);font-size:1.2rem;background:rgba(255,254,249,.85)}
+.slip-stamp{position:absolute;right:22px;bottom:40px;border:3px solid var(--teal-ink);color:var(--teal-ink);font-family:var(--display);font-weight:800;padding:8px 14px;line-height:1.1;transform:rotate(-10deg);font-size:1.2rem;background:rgba(255,254,249,.85)}
 
 /* contact */
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px 56px;align-items:start}
